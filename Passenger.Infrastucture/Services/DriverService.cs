@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using Passenger.Core.Repositories;
 using Passenger.Infrastucture.DTO;
 
@@ -11,9 +12,9 @@ namespace Passenger.Infrastucture.Services
         {
             _driverRepository = driverRepository;
         }
-        public DriverDto Get(Guid userId)
+        public async Task<DriverDto> GetAsync(Guid userId)
         {
-            var driver = _driverRepository.Get(userId);
+            var driver = await _driverRepository.GetAsync(userId);
 
             return new DriverDto
             {
