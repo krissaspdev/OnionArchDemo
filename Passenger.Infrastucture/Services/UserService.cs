@@ -1,4 +1,5 @@
 using System;
+using AutoMapper;
 using Passenger.Core.Domain;
 using Passenger.Core.Repositories;
 using Passenger.Infrastucture.DTO;
@@ -8,22 +9,19 @@ namespace Passenger.Infrastucture.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        public UserService(IUserRepository userRepository)
+        private readonly IMapper _mapper;
+
+        public UserService(IUserRepository userRepository, IMapper mapper)
         {
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         public UserDto Get(string email)
         {
             var user = _userRepository.Get(email);
 
-            return new UserDto
-            {
-                Id = user.Id,
-                Email = user.Email,
-                Username = user.Username,
-                FullName = user.FullName                            
-            };
+            return _mapper.Map<User, UserDto>(user);
         }
 
         public void Register(string email, string username, string password)

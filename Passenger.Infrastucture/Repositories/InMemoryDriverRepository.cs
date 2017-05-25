@@ -17,8 +17,8 @@ namespace Passenger.Infrastucture.Repositories
             _drivers.Add(driver);
         }
 
-        public Driver Get(Guid id)
-        => _drivers.Single(x => x.UserId == id);
+        public Driver Get(Guid userId)
+        => _drivers.Single(x => x.UserId == userId);
 
         public IEnumerable<Driver> GetAll() => _drivers;
 

@@ -21,9 +21,9 @@ namespace Passenger.Infrastucture.Repositories
         }
 
         public User Get(string email)
-        => _users.Single(x => x.Email == email.ToLowerInvariant());
+        => _users.SingleOrDefault(x => x.Email == email.ToLowerInvariant());
 
-        public User Get(Guid id) => _users.Single(x => x.Id == id);
+        public User Get(Guid id) => _users.SingleOrDefault(x => x.Id == id);
 
         public IEnumerable<User> GetAll() => _users;
 
