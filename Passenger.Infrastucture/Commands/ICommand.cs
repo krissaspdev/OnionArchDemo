@@ -1,7 +1,7 @@
 namespace Passenger.Infrastucture.Commands
 {
     // Marker Interface
-    public interface ICommands
+    public interface ICommand
     {
          
     }
