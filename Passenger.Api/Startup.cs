@@ -1,7 +1,5 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Text;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Builder;
@@ -10,10 +8,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Passenger.Core.Repositories;
+using Passenger.Infrastucture.IoC;
 using Passenger.Infrastucture.IoC.Modules;
 using Passenger.Infrastucture.Mappers;
 using Passenger.Infrastucture.Repositories;
 using Passenger.Infrastucture.Services;
+using Passenger.Infrastucture.Settings;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Passenger.Api
 {
@@ -37,15 +38,12 @@ namespace Passenger.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddScoped<IUserRepository, InMemoryUserRepository>();
-            services.AddScoped<IUserService, UserService>();
-            services.AddSingleton(AutoMapperConfig.Initialize());
             services.AddMvc();
-
             var builder = new ContainerBuilder();
             builder.Populate(services);
-            builder.RegisterModule<CommandModule>();
+            builder.RegisterModule(new ContainerModule(Configuration));
             ApplicationContainer = builder.Build();
+
             return new AutofacServiceProvider(ApplicationContainer);
         }
 
@@ -55,6 +53,18 @@ namespace Passenger.Api
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            var jwtSettings = app.ApplicationServices.GetService<JwtSettings>();
+
+            app.UseJwtBearerAuthentication(new JwtBearerOptions
+            {
+                AutomaticAuthenticate = true,
+                TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidateAudience = false,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
+                }
+            });
             app.UseMvc();
 
             // If you want to dispose of resources that have been resolved in the

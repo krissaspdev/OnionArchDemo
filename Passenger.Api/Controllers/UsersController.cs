@@ -7,6 +7,7 @@ using Passenger.Infrastucture.Commands;
 using Passenger.Infrastucture.Commands.Users;
 using Passenger.Infrastucture.DTO;
 using Passenger.Infrastucture.Services;
+using Passenger.Infrastucture.Settings;
 
 namespace Passenger.Api.Controllers
 {
@@ -15,9 +16,11 @@ namespace Passenger.Api.Controllers
     {
 
         private readonly IUserService _userService;
-        public UsersController(IUserService userService, ICommandDispatcher commandDispatcher): base(commandDispatcher)
+        private readonly GeneralSettings _settings;
+        public UsersController(IUserService userService, ICommandDispatcher commandDispatcher, GeneralSettings settings): base(commandDispatcher)
         {
             _userService = userService;
+            _settings = settings;
         }
 
         [HttpGet("{email}")]
@@ -28,7 +31,7 @@ namespace Passenger.Api.Controllers
             {
                 return NotFound();
             }
-
+            
             return Json(user);
 
         }
