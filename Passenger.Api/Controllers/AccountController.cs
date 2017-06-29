@@ -1,17 +1,22 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using Passenger.Infrastucture.Commands;
+using Passenger.Infrastucture.Commands.Accounts;
 using Passenger.Infrastucture.Commands.Users;
 using Passenger.Infrastucture.Services;
+using Passenger.Infrastucture.Extensions;
+using Microsoft.AspNetCore.Authorization;
+using System;
 
 namespace Passenger.Api.Controllers
 {
     public class AccountController : ApiControllerBase
     {
-        private readonly IJwtHandler _jwtHandler;
-        public AccountController(ICommandDispatcher commandDispatcher, IJwtHandler jwtHandler) : base(commandDispatcher)
+        private readonly IMemoryCache _cache;
+        public AccountController(ICommandDispatcher commandDispatcher, IMemoryCache cache) : base(commandDispatcher)
         {
-            _jwtHandler = jwtHandler;
+            _cache = cache;
         }
 
 
@@ -23,13 +28,15 @@ namespace Passenger.Api.Controllers
             return NoContent();
         }
 
-        [HttpGet("")]
-        [Route("token")]
-        public IActionResult Get()
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> Post([FromBody]Login command)
         {
-            var token = _jwtHandler.CreateToken("user1@email.com", "user");
-            return Json(token);
-        }
+            await CommandDispatcher.DispachAsync(command);
+            var jwt = _cache.GetJwt(Guid.NewGuid());
+
+            return Json(jwt);
+        }   
 
     }
 }

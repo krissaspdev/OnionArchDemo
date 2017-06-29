@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Passenger.Infrastucture.Commands;
 using Passenger.Infrastucture.Commands.Users;
@@ -22,7 +23,8 @@ namespace Passenger.Api.Controllers
             _userService = userService;
             _settings = settings;
         }
-
+        
+       //[Authorize(Policy="admin")]
         [HttpGet("{email}")]
         public async Task<IActionResult> Get(string email)
         {
@@ -35,6 +37,13 @@ namespace Passenger.Api.Controllers
             return Json(user);
 
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            var users = await _userService.BrowseAsync();
+            return Json(users);
+        }        
 
         [HttpPost("")]
         public async Task<IActionResult> Post([FromBody]CreateUser command)

@@ -38,6 +38,8 @@ namespace Passenger.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthorization(x => x.AddPolicy("admin" , p => p.RequireRole("admin")));
+            services.AddMemoryCache();
             services.AddMvc();
             var builder = new ContainerBuilder();
             builder.Populate(services);
@@ -65,6 +67,15 @@ namespace Passenger.Api
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key))
                 }
             });
+
+            var generalSettings = app.ApplicationServices.GetService<GeneralSettings>();
+            if(generalSettings.SeedData)
+            {
+                var dataInitializer = app.ApplicationServices.GetService<IDataInitializer>();
+                dataInitializer.SeedAsync();
+            }
+
+
             app.UseMvc();
 
             // If you want to dispose of resources that have been resolved in the
