@@ -11,7 +11,7 @@ namespace Passenger.Infrastucture.Commands
         {
             _context = context;
         }
-        public async Task DispachAsync<T>(T command) where T : ICommand
+        public async Task DispatchAsync<T>(T command) where T : ICommand
         {
             if(command == null)
             throw new ArgumentNullException(nameof(command), $"Commmand: '{typeof(T).Name}' can not be null.");

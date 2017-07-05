@@ -33,9 +33,9 @@ namespace Passenger.Core.Domain
             Name = user.Username;
         }
 
-        public void SetVehicle(string brand, string name, int seats)
+        public void SetVehicle(Vehicle vehicle)
         {
-            Vehicle = Vehicle.Create(brand, name, seats);
+            Vehicle = vehicle;
             UpdatedAt = DateTime.UtcNow;
         }
 
@@ -50,15 +50,15 @@ namespace Passenger.Core.Domain
             UpdatedAt = DateTime.UtcNow;
         }
 
-        // public void DeleteRoute(string name)
-        // {
-        //     var route = Routes.SingleOrDefault(x => x.Name == name);
-        //     if(route == null)
-        //     {
-        //         throw new Exception($"Route named: '{name}' for driver: '{Name}' was not found.");
-        //     }
-        //     _routes.Remove(route);
-        //     UpdatedAt = DateTime.UtcNow;            
-        // }        
+        public void DeleteRoute(string name)
+        {
+            var route = Routes.SingleOrDefault(x => x.Name == name);
+            if(route == null)
+            {
+                throw new Exception($"Route named: '{name}' for driver: '{Name}' was not found.");
+            }
+            _routes.Remove(route);
+            UpdatedAt = DateTime.UtcNow;            
+        }        
     }
 }

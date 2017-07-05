@@ -15,6 +15,7 @@ using Passenger.Infrastucture.Repositories;
 using Passenger.Infrastucture.Services;
 using Passenger.Infrastucture.Settings;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 
 namespace Passenger.Api
 {
@@ -40,7 +41,8 @@ namespace Passenger.Api
         {
             services.AddAuthorization(x => x.AddPolicy("admin" , p => p.RequireRole("admin")));
             services.AddMemoryCache();
-            services.AddMvc();
+            services.AddMvc()
+            .AddJsonOptions(x => x.SerializerSettings.Formatting = Formatting.Indented);
             var builder = new ContainerBuilder();
             builder.Populate(services);
             builder.RegisterModule(new ContainerModule(Configuration));

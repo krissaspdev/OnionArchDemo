@@ -21,12 +21,25 @@ namespace Passenger.Api.Controllers
         {
             var drivers = await _driverService.BrowseAsync();
             return Json(drivers);
-        } 
-        
+        }
+
+
+        [HttpGet]
+        [Route("{userId}")]
+        public async Task<IActionResult> Get(Guid userId)
+        {
+            var driver = await _driverService.GetAsync(userId);
+            if (driver == null)
+            {
+                return NotFound();
+            }
+            return Json(driver);
+        }
+
         [HttpPost("")]
         public async Task<IActionResult> Put([FromBody]CreateDriver command)
         {
-            await CommandDispatcher.DispachAsync(command);
+            await DispatchAsync(command);
             return NoContent();
         }
     }

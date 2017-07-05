@@ -24,7 +24,7 @@ namespace Passenger.Api.Controllers
         [Route("password")]
         public async Task<IActionResult> Put([FromBody]ChangeUserPassword command)
         {
-            await CommandDispatcher.DispachAsync(command);
+            await DispatchAsync(command);
             return NoContent();
         }
 
@@ -32,7 +32,7 @@ namespace Passenger.Api.Controllers
         [Route("login")]
         public async Task<IActionResult> Post([FromBody]Login command)
         {
-            await CommandDispatcher.DispachAsync(command);
+            await DispatchAsync(command);
             var jwt = _cache.GetJwt(Guid.NewGuid());
 
             return Json(jwt);

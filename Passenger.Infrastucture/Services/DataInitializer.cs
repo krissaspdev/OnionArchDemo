@@ -10,14 +10,14 @@ namespace Passenger.Infrastucture.Services
     {
         private readonly IUserService _userService;
         private readonly IDriverService _driverService;
-        //private readonly IDriverRouteService _driverRouteService;
+        private readonly IDriverRouteService _driverRouteService;
         private readonly ILogger<DataInitializer> _logger;
 
-        public DataInitializer(IUserService userService, IDriverService driverService, ILogger<DataInitializer> logger)
+        public DataInitializer(IUserService userService, IDriverService driverService, IDriverRouteService driverRouteService, ILogger<DataInitializer> logger)
         {
             _userService = userService;
             _driverService = driverService;
-            //_driverRouteService = driverRouteService;
+            _driverRouteService = driverRouteService;
             _logger = logger;
         }
 
@@ -33,12 +33,11 @@ namespace Passenger.Infrastucture.Services
                     username, "secret", "user"));
                 _logger.LogTrace($"Adding user: '{username}'.");
                 tasks.Add(_driverService.CreateAsync(userId));
-                tasks.Add(_driverService.SetVehicleAsync(userId, "BMW", "i8", 5));
-                // tasks.Add(_driverRouteService.AddAsync(userId, "Default route",
-                //     1,1,2,2));
-                // tasks.Add(_driverRouteService.AddAsync(userId, "Job route",
-                //     3,3,5,5));
+                tasks.Add(_driverService.SetVehicleAsync(userId, "BMW", "i8"));
                 _logger.LogTrace($"Created new driver for: '{username}'.");
+                 tasks.Add(_driverRouteService.AddAsync(userId, "Default route",1,1,2,2));
+                 tasks.Add(_driverRouteService.AddAsync(userId, "Job route",3,3,5,5));
+                _logger.LogTrace($"Created new routes for: '{username}'.");
             }
             for (var i = 1; i <= 3; i++)
             {
@@ -49,8 +48,9 @@ namespace Passenger.Infrastucture.Services
                     username, "secret", "admin"));
             }
 
-            await Task.WhenAll(tasks).ContinueWith(t => {
-           _logger.LogTrace("Data was initialized.");
+            await Task.WhenAll(tasks).ContinueWith(t =>
+            {
+                _logger.LogTrace("Data was initialized.");
             });
         }
     }

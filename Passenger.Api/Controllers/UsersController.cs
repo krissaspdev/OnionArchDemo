@@ -48,8 +48,8 @@ namespace Passenger.Api.Controllers
         [HttpPost("")]
         public async Task<IActionResult> Post([FromBody]CreateUser command)
         {
-            await CommandDispatcher.DispachAsync(command);
-            return Created($"users/{command.Email}", new object());
+            await DispatchAsync(command);
+            return Created($"users/{command.Email}", null);
         }
     }
 }

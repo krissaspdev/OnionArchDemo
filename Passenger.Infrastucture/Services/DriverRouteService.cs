@@ -24,17 +24,27 @@ namespace Passenger.Infrastucture.Services
             double startLatitude, double startLongitude,
             double endLatitude, double endLongitude)
         {
-            // var driver = await _driverRepository.GetAsync(userId);
-            // if(driver == null)
-            // {
-            //     throw new Exception($"Driver with user id: '{userId}' was not found.");
-            // }
-            // var start = Node.Create("Start address", startLatitude, startLongitude);
-            // var end = Node.Create("End address", endLatitude, endLongitude);
-            // driver.AddRoute(name, start, end);
-            // await _driverRepository.UpdateAsync(driver);
+            var driver = await _driverRepository.GetAsync(userId);
+            if(driver == null)
+            {
+                throw new Exception($"Driver with user id: '{userId}' was not found.");
+            }
+            var start = Node.Create("Start address", startLatitude, startLongitude);
+            var end = Node.Create("End address", endLatitude, endLongitude);
+            driver.AddRoute(name, start, end);
+            await _driverRepository.UpdateAsync(driver);
+        }
 
-            await Task.CompletedTask;
+        public async Task DeleteAsync(Guid userId, string name)
+        {
+            var driver = await _driverRepository.GetAsync(userId);
+            if(driver == null)
+            {
+                throw new Exception($"Driver with user id: '{userId}' was not found.");
+            }
+
+            driver.DeleteRoute(name);
+            await _driverRepository.UpdateAsync(driver);
         }
     }
 }
