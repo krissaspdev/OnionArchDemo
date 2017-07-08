@@ -16,6 +16,7 @@ using Passenger.Infrastucture.Services;
 using Passenger.Infrastucture.Settings;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json;
+using Passenger.Api.Framework;
 
 namespace Passenger.Api
 {
@@ -76,8 +77,8 @@ namespace Passenger.Api
                 var dataInitializer = app.ApplicationServices.GetService<IDataInitializer>();
                 dataInitializer.SeedAsync();
             }
-
-
+            
+            app.UseMyExceptionHandler();
             app.UseMvc();
 
             // If you want to dispose of resources that have been resolved in the

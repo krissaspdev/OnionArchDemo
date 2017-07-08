@@ -25,14 +25,14 @@ namespace Passenger.Infrastucture.Services
         {
             var users = await _userRepository.BrowseAsync();
 
-            return _mapper.Map<IEnumerable<User>,IEnumerable<UserDto>>(users);
+            return _mapper.Map<IEnumerable<UserDto>>(users);
         }
 
         public async Task<UserDto> GetAsync(string email)
         {
             var user = await _userRepository.GetAsync(email);
 
-            return _mapper.Map<User, UserDto>(user);
+            return _mapper.Map<UserDto>(user);
         }
 
         public async Task LoginAsync(string email, string password)

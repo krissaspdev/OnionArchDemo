@@ -1,4 +1,5 @@
 using System;
+using Passenger.Infrastucture.Commands.Drivers.Models;
 
 namespace Passenger.Infrastucture.Commands.Drivers
 {
@@ -7,9 +8,5 @@ namespace Passenger.Infrastucture.Commands.Drivers
         public DriverVehicle Vehicle { get; set; }
     }
 
-    public class DriverVehicle
-    {
-        public string Brand { get; set; }
-        public string Name { get; set; }
-    }
+
 }
