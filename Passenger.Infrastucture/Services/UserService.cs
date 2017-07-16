@@ -5,6 +5,7 @@ using AutoMapper;
 using Passenger.Core.Domain;
 using Passenger.Core.Repositories;
 using Passenger.Infrastucture.DTO;
+using Passenger.Infrastucture.Exceptions;
 
 namespace Passenger.Infrastucture.Services
 {
@@ -40,7 +41,7 @@ namespace Passenger.Infrastucture.Services
             var user = await _userRepository.GetAsync(email);
             if(user == null)
             {
-                throw new Exception("Invalid credentioals.");
+                throw new ServiceException(Exceptions.ErrorCodes.InvalidCredentials, "Invalid credentials.");
             }
             
             var hash = _encrypter.GetHash(password, user.Salt);
@@ -49,7 +50,7 @@ namespace Passenger.Infrastucture.Services
                 return;
             }
             
-            throw new Exception("Invalid credentioals.");
+            throw new ServiceException(Exceptions.ErrorCodes.InvalidCredentials, "Invalid credentials.");
         }
 
         public async Task RegisterAsync(Guid userId, string email, 
@@ -58,7 +59,7 @@ namespace Passenger.Infrastucture.Services
             var user = await _userRepository.GetAsync(email);
             if(user != null)
             {
-                throw new Exception($"User with email '{email}' already exist.");
+                throw new ServiceException(Exceptions.ErrorCodes.EmailInUse, $"User with email '{email}' already exist.");
             }
             
             var salt = _encrypter.GetSalt(password);

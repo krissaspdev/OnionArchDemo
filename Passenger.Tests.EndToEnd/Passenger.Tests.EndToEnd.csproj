@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+  <Content Include="nlog.config" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="appsettings.json" CopyToOutputDirectory="PreserveNewest"/>
   </ItemGroup>
 
