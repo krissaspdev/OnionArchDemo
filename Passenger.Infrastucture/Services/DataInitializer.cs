@@ -24,20 +24,26 @@ namespace Passenger.Infrastucture.Services
 
         public async Task SeedAsync()
         {
+            var users = await _userService.BrowseAsync();
+            if(users.Any())
+            {
+                return;
+            }
+            
             Logger.Trace("Initializing data...");
             var tasks = new List<Task>();
             for (var i = 1; i <= 10; i++)
             {
                 var userId = Guid.NewGuid();
                 var username = $"user{i}";
-                tasks.Add(_userService.RegisterAsync(userId, $"user{i}@test.com",
-                    username, "secret", "user"));
+                await _userService.RegisterAsync(userId, $"user{i}@test.com",
+                    username, "secret", "user");
                 Logger.Trace($"Adding user: '{username}'.");
-                tasks.Add(_driverService.CreateAsync(userId));
-                tasks.Add(_driverService.SetVehicleAsync(userId, "BMW", "i8"));
+                await _driverService.CreateAsync(userId);
+                await _driverService.SetVehicleAsync(userId, "BMW", "i8");
                 Logger.Trace($"Created new driver for: '{username}'.");
-                 tasks.Add(_driverRouteService.AddAsync(userId, "Default route",1,1,2,2));
-                 tasks.Add(_driverRouteService.AddAsync(userId, "Job route",3,3,5,5));
+                await _driverRouteService.AddAsync(userId, "Default route",1,1,2,2);
+                await _driverRouteService.AddAsync(userId, "Job route",3,3,5,5);
                 Logger.Trace($"Created new routes for: '{username}'.");
             }
             for (var i = 1; i <= 3; i++)
