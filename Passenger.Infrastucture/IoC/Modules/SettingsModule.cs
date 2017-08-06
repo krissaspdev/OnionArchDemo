@@ -1,5 +1,6 @@
 using Autofac;
 using Microsoft.Extensions.Configuration;
+using Passenger.Infrastucture.EF;
 using Passenger.Infrastucture.Extensions;
 using Passenger.Infrastucture.Mongo;
 using Passenger.Infrastucture.Settings;
@@ -18,13 +19,16 @@ namespace Passenger.Infrastucture.IoC.Modules
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterInstance(_configuration.GetSettings<GeneralSettings>())
-                   .SingleInstance();            
+                   .SingleInstance();
 
             builder.RegisterInstance(_configuration.GetSettings<JwtSettings>())
                    .SingleInstance();
 
             builder.RegisterInstance(_configuration.GetSettings<MongoSettings>())
-                   .SingleInstance();                                                
-        }  
+                   .SingleInstance();
+
+            builder.RegisterInstance(_configuration.GetSettings<SqlSettings>())
+            .SingleInstance();
+        }
     }
 }
